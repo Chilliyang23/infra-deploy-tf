@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'CHANGELOG.md'
+
+jobs:
+  release:
+    permissions:
+      contents: 'read'
+      id-token: 'write'    
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::339270093312:role/s3-put-github-actions-joi-news-aws
+          aws-region: eu-west-2
+
+      - name: Clean working directory
+        run: git checkout . && git clean -d -x -f
+
+      - name: Publish to S3
+        run: ./recops.sh _publish
