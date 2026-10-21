@@ -1,5 +1,4 @@
 # Infra Pairing Assessment
-# test
 
 This project contains three services:
 
